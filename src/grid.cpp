@@ -2,29 +2,36 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 int gridThickness = 3;
 void drawGrid(int gridSize, sf::Vector2f offset, int width, int height, sf::RenderWindow* window){
-  
-  sf::Vector2f center(width/2, height/2);
+  sf::Color out(0,0,0); 
   sf::RectangleShape vertLine(sf::Vector2f(gridThickness,  width));
   sf::RectangleShape horiLine(sf::Vector2f(height, gridThickness));
+  vertLine.setOutlineColor(out);
+  vertLine.setOutlineThickness(1);
+  horiLine.setOutlineColor(out);
+  horiLine.setOutlineThickness(1);
   int h = (int)offset.x % gridSize;
   int v = (int)offset.y % gridSize;
-  for(int i = center.x + gridSize/2 + h; i < width; i+=gridSize){
-    vertLine.setPosition(i, 0);
+  for(int i = -1; i < width/gridSize + 1; i++){
+    vertLine.setPosition((i * gridSize) + h, 0);
+    horiLine.setPosition( 0, (i * gridSize) + v);
     window->draw(vertLine);
-  }
-  for(int i = center.x - gridSize/2 + h; i>0; i-=gridSize){
-      vertLine.setPosition(i, 0);
-      window->draw(vertLine);
-    }
-  for(int i = center.y + gridSize/2 + v; i < height; i+=gridSize){
-    horiLine.setPosition(0, i);
     window->draw(horiLine);
   }
-  for(int i = center.y - gridSize/2 + v; i>0; i-=gridSize){
-      horiLine.setPosition(0, i);
-      window->draw(horiLine);
-    }
-  return;
+  vertLine.setSize(sf::Vector2f(1, width)); 
+  horiLine.setSize(sf::Vector2f(height, 1));
+  vertLine.setOutlineThickness(0);
+  horiLine.setOutlineThickness(0);
+  vertLine.setFillColor(sf::Color(100,100,100));
+  horiLine.setFillColor(sf::Color(100,100,100));
+  for(int j = -4; j < (width/gridSize+1) * 4; j++){
+    vertLine.setPosition((j * gridSize/4) + h, 0);
+    horiLine.setPosition( 0, (j * gridSize/4) + v);
+    window->draw(vertLine);
+    window->draw(horiLine);
   }
+  return;
+}
+
